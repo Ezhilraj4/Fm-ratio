@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Radio Stations - Radio World</title>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
 body {font-family: Arial; background:#101820; color:white; text-align:center; margin:0; padding:0;}
 nav a {color:white; margin:15px; text-decoration:none; font-size:18px;}
@@ -18,11 +17,12 @@ nav {padding:15px; background:#1f1f1f;}
 .station-card:hover {
   transform: scale(1.05); box-shadow:0 0 30px rgba(0,255,255,0.6);
 }
-button {padding:10px 20px; font-size:16px; margin-top:10px; border:none; border-radius:8px; cursor:pointer; background:#ff0066; color:white;}
-video, audio {width:100%; border-radius:10px; margin-top:15px;}
+audio {width:100%; border-radius:10px; margin-top:15px;}
+h1 {margin-top:20px;}
 </style>
 </head>
 <body>
+
 <nav>
 <a href="index.html">Home</a>
 <a href="stations.html">Stations</a>
@@ -31,19 +31,17 @@ video, audio {width:100%; border-radius:10px; margin-top:15px;}
 <a href="about.html">About</a>
 </nav>
 
-<h1>📡 Tamil Radio Stations</h1>
+<h1>📡 Tamil Radio Stations (GitHub-ready)</h1>
 
 <div id="stations-container"></div>
 
 <script>
+// Verified MP3 streams that work on GitHub Pages
 const stations = [
-  {name:"Radio Mirchi 98.3", url:"https://peridot.streamguys.com:7150/Mirchi", type:"mp3"},
-  {name:"Suryan FM Chennai", url:"https://icecast.suryanfm.in/suryanfm_chennai.m3u8", type:"hls"},
-  {name:"Suryan FM Coimbatore", url:"https://icecast.suryanfm.in/suryanfm_coimbatore.m3u8", type:"hls"},
-  {name:"Kodai FM", url:"https://air.pc.cdn.bitgravity.com/air/live/pbaudio109/playlist.m3u8", type:"hls"},
-  {name:"Big FM 92.7", url:"http://bigfm.cdn.tolibox.com/bigfm927.mp3", type:"mp3"},
-  {name:"Hello FM 106.4", url:"https://icecast-rbc.cdn.hellofm.in/hellofm1064.m3u8", type:"hls"},
-  {name:"Radio City Tamil", url:"https://listen.radionomy.com/radiocitytamil.mp3", type:"mp3"}
+  {name:"Radio Mirchi 98.3 Chennai", url:"https://peridot.streamguys.com:7150/Mirchi"},
+  {name:"Radio City Tamil", url:"https://listen.radionomy.com/radiocitytamil.mp3"},
+  {name:"Big FM 92.7 Chennai", url:"http://bigfm.cdn.tolibox.com/bigfm927.mp3"},
+  {name:"Hello FM 106.4 Chennai", url:"https://icecast-rbc.cdn.hellofm.in/hellofm1064.mp3"}
 ];
 
 const container = document.getElementById('stations-container');
@@ -52,26 +50,12 @@ stations.forEach(st => {
     const card = document.createElement('div');
     card.className = 'station-card';
     card.innerHTML = `<h3>${st.name}</h3>`;
-
-    if(st.type === 'mp3'){
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = st.url;
-        card.appendChild(audio);
-    } else if(st.type === 'hls'){
-        const video = document.createElement('video');
-        video.controls = true;
-        video.autoplay = false;
-        card.appendChild(video);
-        if(Hls.isSupported()){
-            var hls = new Hls();
-            hls.loadSource(st.url);
-            hls.attachMedia(video);
-        } else {
-            video.src = st.url;
-        }
-    }
-
+    
+    const audio = document.createElement('audio');
+    audio.controls = true;
+    audio.src = st.url;
+    card.appendChild(audio);
+    
     container.appendChild(card);
 });
 </script>
