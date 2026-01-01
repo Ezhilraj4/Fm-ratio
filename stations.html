@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Radio Stations</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio Stations - Radio World</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
-body{font-family:Arial;background:#101820;color:white;text-align:center;}
-nav a{color:white;margin:15px;text-decoration:none;font-size:20px;}
-nav{padding:15px;background:#1f1f1f;}
-.station{background:#1a1a1a;margin:20px;padding:20px;border-radius:10px;}
-audio{width:90%;}
+body {font-family: Arial; background:#101820; color:white; text-align:center; margin:0; padding:0;}
+nav a {color:white; margin:15px; text-decoration:none; font-size:18px;}
+nav {padding:15px; background:#1f1f1f;}
+.station-card {
+  background: linear-gradient(135deg, #272748, #3a3a6b);
+  margin:20px auto; padding:20px; width:90%; max-width:500px;
+  border-radius:15px; box-shadow:0 0 20px rgba(0,0,0,0.5);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.station-card:hover {
+  transform: scale(1.05); box-shadow:0 0 30px rgba(0,255,255,0.6);
+}
+button {padding:10px 20px; font-size:16px; margin-top:10px; border:none; border-radius:8px; cursor:pointer; background:#ff0066; color:white;}
+video, audio {width:100%; border-radius:10px; margin-top:15px;}
 </style>
 </head>
 <body>
@@ -21,23 +33,48 @@ audio{width:90%;}
 
 <h1>📡 Tamil Radio Stations</h1>
 
-<div class="station"><h3>Suryan FM (Chennai)</h3>
-<audio controls src="https://icecast.suryanfm.in/suryanfm_chennai"></audio></div>
+<div id="stations-container"></div>
 
-<div class="station"><h3>Suryan FM (Coimbatore)</h3>
-<audio controls src="https://icecast.suryanfm.in/suryanfm_coimbatore"></audio></div>
+<script>
+const stations = [
+  {name:"Radio Mirchi 98.3", url:"https://peridot.streamguys.com:7150/Mirchi", type:"mp3"},
+  {name:"Suryan FM Chennai", url:"https://icecast.suryanfm.in/suryanfm_chennai.m3u8", type:"hls"},
+  {name:"Suryan FM Coimbatore", url:"https://icecast.suryanfm.in/suryanfm_coimbatore.m3u8", type:"hls"},
+  {name:"Kodai FM", url:"https://air.pc.cdn.bitgravity.com/air/live/pbaudio109/playlist.m3u8", type:"hls"},
+  {name:"Big FM 92.7", url:"http://bigfm.cdn.tolibox.com/bigfm927.mp3", type:"mp3"},
+  {name:"Hello FM 106.4", url:"https://icecast-rbc.cdn.hellofm.in/hellofm1064.m3u8", type:"hls"},
+  {name:"Radio City Tamil", url:"https://listen.radionomy.com/radiocitytamil.mp3", type:"mp3"}
+];
 
-<div class="station"><h3>Radio Mirchi 98.3</h3>
-<audio controls src="https://peridot.streamguys.com:7150/Mirchi"></audio></div>
+const container = document.getElementById('stations-container');
 
-<div class="station"><h3>Radio City Tamil</h3>
-<audio controls src="https://cityplus.streamabc.com/cityplus.mp3"></audio></div>
+stations.forEach(st => {
+    const card = document.createElement('div');
+    card.className = 'station-card';
+    card.innerHTML = `<h3>${st.name}</h3>`;
 
-<div class="station"><h3>Big FM 92.7</h3>
-<audio controls src="http://bigfm.cdn.tolibox.com/bigfm927.mp3"></audio></div>
+    if(st.type === 'mp3'){
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = st.url;
+        card.appendChild(audio);
+    } else if(st.type === 'hls'){
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = false;
+        card.appendChild(video);
+        if(Hls.isSupported()){
+            var hls = new Hls();
+            hls.loadSource(st.url);
+            hls.attachMedia(video);
+        } else {
+            video.src = st.url;
+        }
+    }
 
-<div class="station"><h3>Hello FM 106.4</h3>
-<audio controls src="https://icecast-rbc.cdn.hellofm.in/hellofm1064"></audio></div>
+    container.appendChild(card);
+});
+</script>
 
 </body>
 </html>
